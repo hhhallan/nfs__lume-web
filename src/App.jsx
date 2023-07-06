@@ -1,21 +1,32 @@
 import {createBrowserRouter, Outlet, RouterProvider} from "react-router-dom";
+import {DashboardExamplePage, HomePage} from "./components/pages/pages.js";
+import styled from "styled-components";
 
 const Layout = () => {
     return (
-        <div className="app">
-            <Outlet />
-        </div>
+        <LayoutStyled>
+            <Outlet/>
+        </LayoutStyled>
     )
 }
+
+const LayoutStyled = styled.div`
+  width: 1000px;
+  margin-inline: auto;
+`;
 
 const router = createBrowserRouter([
     {
         path: "/",
-        element: <Layout />,
+        element: <Layout/>,
         children: [
             {
                 path: "/",
-                element: <div>HOME</div>
+                element: <HomePage/>
+            },
+            {
+                path: "/dashboard",
+                element: <DashboardExamplePage/>
             },
         ]
     },
@@ -24,7 +35,7 @@ const router = createBrowserRouter([
 const App = () => {
     return (
         <>
-            <RouterProvider router={router} />
+            <RouterProvider router={router}/>
         </>
     );
 };
