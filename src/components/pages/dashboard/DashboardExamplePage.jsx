@@ -11,10 +11,16 @@ import {
     TabPanel,
     TabPanels,
 } from "@tremor/react";
+import {useNavigate} from "react-router-dom";
 
 export default function DashboardExamplePage() {
+    const navigate = useNavigate();
+
     return (
         <main className="px-12 py-12">
+
+            <button onClick={() => navigate('/')}>home</button>
+
             <Title>Dashboard</Title>
             <Text>Lorem ipsum dolor sit amet, consetetur sadipscing elitr.</Text>
 
