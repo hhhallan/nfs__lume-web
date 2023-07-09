@@ -13,7 +13,7 @@ const Layout = () => {
 };
 
 const LayoutStyled = styled.div`
-  width: 1200px;
+  width: 1250px;
   margin-inline: auto;
 `;
 
