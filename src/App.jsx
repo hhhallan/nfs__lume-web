@@ -1,35 +1,70 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, {useState} from 'react';
+import {BrowserRouter, createBrowserRouter, Link, Outlet, Route, RouterProvider, Routes} from 'react-router-dom';
+import {AdminHomePage, DashboardExamplePage, HomePage} from './components/pages/pages.js';
+import styled from 'styled-components';
+import {ProtectedRoute} from "./components/reusable/components.js";
 
-function App() {
-  const [count, setCount] = useState(0)
+const Layout = () => {
+    return (
+        <LayoutStyled>
+            <Outlet/>
+        </LayoutStyled>
+    );
+};
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+const LayoutStyled = styled.div`
+  width: 1000px;
+  margin-inline: auto;
+`;
 
-export default App
+const Navigation = () => (
+    <nav>
+        <Link to="/">Home</Link>
+        <Link to="/dashboard">Dashboard</Link>
+        <Link to="/admin/home">Admin</Link>
+    </nav>
+);
+
+const App = () => {
+    const [user, setUser] = useState(null);
+
+    const handleLogin = () => {
+        setUser({
+            id: '1',
+            name: 'robin',
+            role: ['ADMIN']
+        });
+    };
+    const handleLogout = () => {
+        setUser(null);
+    };
+
+    return (
+        <BrowserRouter>
+            <>
+                <Navigation/>
+                {user ? (
+                    <button onClick={handleLogout}>Sign Out</button>
+                ) : (
+                    <button onClick={handleLogin}>Sign In</button>
+                )}
+                <Routes>
+                    <Route path="/" element={<Layout/>}>
+                        <Route index element={<HomePage/>}/>
+                        <Route element={<ProtectedRoute isAllowed={user}/>}>
+                            <Route path="dashboard" element={<DashboardExamplePage/>}/>
+                        </Route>
+
+                        <Route element={<ProtectedRoute isAllowed={!!user && user.role.includes('ADMIN')}/>}>
+                            <Route path="admin/home" element={<AdminHomePage/>}/>
+                        </Route>
+                        <Route path="*" element={<p>There's nothing here: 404!</p>}/>
+                        {/*<ProtectedRoute path="dashboard" component={<DashboardExamplePage/>} isLogged={isLogged}/>*/}
+                    </Route>
+                </Routes>
+            </>
+        </BrowserRouter>
+    );
+};
+
+export default App;
